@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Business Manager</title>
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --dark-bg: #1e1e2f;
+      --light-bg: #f9f9fc;
+      --text-color: #2c3e50;
+      --accent-color: #0dcaf0;
+    }
+
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(to right, #0d6efd, #0dcaf0);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    nav {
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-color);
+      margin-left: 25px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--primary-color);
+    }
+
+    .container {
+      padding: 60px 20px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    .container h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #0d6efd;
+    }
+
+    .container p {
+      font-size: 1.1em;
+      color: #444;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      background: var(--primary-color);
+      color: white;
+      padding: 14px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .cta-button:hover {
+      background: #0b5ed7;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background-color: var(--dark-bg);
+      color: #ccc;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav a {
+        margin: 10px 0;
+      }
+
+      .container {
+        padding: 30px 15px;
+      }
+
+      header h1 {
+        font-size: 2em;
+      }
+
+      .container h2 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>IT Business Manager</h1>
+    <p>Soluție completă pentru analiza și gestionarea activităților unei companii IT</p>
+  </header>
+
+  <nav>
+    <div>
+      <a href="#">Acasă</a>
+      <a href="#">Despre</a>
+      <a href="#">Funcționalități</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      <a href="#">Login</a>
+      <a href="#">Înregistrare</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Bine ai venit!</h2>
+    <p>Aplicația noastră te ajută să gestionezi eficient procesele de afaceri – de la resurse umane și contabilitate până la marketing și analiză economică.</p>
+    <button class="cta-button">Începe acum</button>
+  </div>
+
+  <footer>
+    &copy; 2025 IT Business Manager. Toate drepturile rezervate.
+  </footer>
+
+</body>
+</html>
