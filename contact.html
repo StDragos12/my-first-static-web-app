@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Acasă - IT Business Manager</title>
+  <title>Contact - IT Business Manager</title>
   <style>
     :root {
       --primary-color: #0d6efd;
@@ -78,74 +78,78 @@
       max-width: 1100px;
       margin: 40px auto;
       padding: 0 20px;
-      text-align: center;
     }
 
     h2 {
-      color: var(--primary-color);
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    p {
-      font-size: 1.1em;
+      text-align: center;
       margin-bottom: 30px;
-    }
-
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 40px;
-    }
-
-    .feature {
-      background: white;
-      padding: 20px;
-      width: 280px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
-    }
-
-    .feature h3 {
       color: var(--primary-color);
-      margin-bottom: 10px;
     }
 
-    .cta-button {
-      margin-top: 40px;
+    form {
+      display: flex;
+      flex-direction: column;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    label {
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      margin-top: 5px;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 120px;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 14px;
       background-color: var(--primary-color);
       color: white;
-      padding: 14px 28px;
       font-size: 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      text-decoration: none;
-      display: inline-block;
+      transition: background 0.3s ease;
     }
 
-    .cta-button:hover {
+    button:hover {
       background-color: #0b5ed7;
-      transform: translateY(-2px);
+    }
+
+    .contact-info {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 1.1em;
+      color: #444;
     }
 
     footer {
-      background-color: var(--dark-bg);
-      color: #ccc;
+      margin-top: 60px;
       text-align: center;
       padding: 20px;
-      font-size: 0.9em;
+      background-color: var(--dark-bg);
+      color: #ccc;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Bine ai revenit la IT Business Manager</h1>
-    <p>Un partener de încredere pentru digitalizarea afacerii tale</p>
+    <h1>Contactează-ne</h1>
+    <p>Suntem aici pentru a răspunde întrebărilor tale și a colabora cu tine.</p>
   </header>
 
   <nav>
@@ -163,25 +167,24 @@
   </nav>
 
   <main class="container">
-    <h2>Ce poți face cu IT Business Manager</h2>
-    <p>Accesează uneltele potrivite pentru o companie IT modernă.</p>
+    <h2>Trimite-ne un mesaj</h2>
+    <form action="https://formspree.io/f/xldbvbzn" method="POST">
+      <label for="nume">Nume:</label>
+      <input type="text" name="nume" id="nume" required>
 
-    <div class="features">
-      <div class="feature">
-        <h3>Consultanță tehnologică</h3>
-        <p>Identificăm soluții scalabile și moderne pentru optimizarea arhitecturii IT, dezvoltare și digitalizare.</p>
-      </div>
-      <div class="feature">
-        <h3>Outsourcing IT</h3>
-        <p>Asigurăm echipe dedicate pentru dezvoltare, suport și operațiuni tehnice cu livrare garantată.</p>
-      </div>
-      <div class="feature">
-        <h3>Produse software proprii</h3>
-        <p>Dezvoltăm și oferim aplicații performante pentru ERP, CRM, suport și automatizare procese.</p>
-      </div>
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" required>
+
+      <label for="mesaj">Mesaj:</label>
+      <textarea name="mesaj" id="mesaj" required></textarea>
+
+      <button type="submit">Trimite mesajul</button>
+    </form>
+
+    <div class="contact-info">
+      <p>📞 Telefon: <strong>0752 865 038</strong></p>
+      <p>📧 Email: <strong>stirbandragos@yahoo.ro</strong></p>
     </div>
-
-    <a class="cta-button" href="functionalitate.html">Accesează platforma</a>
   </main>
 
   <footer>

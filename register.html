@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creare cont - IT Business Manager</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      padding: 40px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #0d6efd;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #0d6efd;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b5ed7;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Creează un cont</h2>
+
+  <form action="http://localhost:3000/register" method="POST" onsubmit="return hashPassword()">
+    <label for="nume">Nume complet:</label>
+    <input type="text" id="nume" name="nume" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="parola">Parolă:</label>
+    <input type="password" id="parola" required>
+
+    <!-- Câmp hidden pentru hash -->
+    <input type="hidden" name="parola_hash" id="parola_hash">
+
+    <button type="submit">Creează cont</button>
+  </form>
+
+  <script>
+    async function hashPassword() {
+      const parola = document.getElementById('parola').value;
+      const encoder = new TextEncoder();
+      const data = encoder.encode(parola);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+      document.getElementById('parola_hash').value = hashHex;
+      document.getElementById('parola').value = ''; // ștergem parola originală
+      return true;
+    }
+  </script>
+
+</body>
+</html>
