@@ -1,214 +1,200 @@
 <!DOCTYPE html>
 <html lang="ro">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>IT Business Manager - Acasă</title>
-    <style>
-      :root {
-        --primary-color: #0d6efd;
-        --dark-bg: #1e1e2f;
-        --light-bg: #f9f9fc;
-        --text-color: #2c3e50;
-        --accent-color: #0dcaf0;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IT Business Manager - Acasă</title>
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --dark-bg: #1e1e2f;
+      --light-bg: #f9f9fc;
+      --text-color: #2c3e50;
+      --accent-color: #0dcaf0;
+    }
 
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        font-family: "Inter", sans-serif;
-        background-color: var(--light-bg);
-        color: var(--text-color);
-        display: flex;
-        flex-direction: column;
-        line-height: 1.6;
-        box-sizing: border-box;
-      }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      box-sizing: border-box;
+    }
 
-      *,
-      *::before,
-      *::after {
-        box-sizing: inherit;
-      }
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
 
-      header {
-        background: linear-gradient(
-          to right,
-          var(--primary-color),
-          var(--accent-color)
-        );
-        color: white;
-        padding: 40px 20px;
-        text-align: center;
-        border-bottom-left-radius: 30px;
-        border-bottom-right-radius: 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
+    header {
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
-      header h1 {
-        font-size: 2.5em;
-        margin: 0 0 10px;
-      }
+    header h1 {
+      font-size: 2.5em;
+      margin: 0 0 10px;
+    }
 
-      header p {
-        font-size: 1.2em;
-        opacity: 0.9;
-        margin: 0;
-      }
+    header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+      margin: 0;
+    }
 
+    nav {
+      background: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
+    }
+
+    nav div {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: var(--primary-color);
+    }
+
+    .container {
+      flex: 1;
+      max-width: 800px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .container h2 {
+      color: var(--primary-color);
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .container p {
+      font-size: 1.1em;
+      color: #444;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 14px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #0b5ed7;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background-color: var(--dark-bg);
+      color: #ccc;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
       nav {
-        background: white;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        padding: 15px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 20px;
       }
 
       nav div {
-        display: flex;
-        gap: 25px;
-      }
-
-      nav a {
-        color: var(--text-color);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
-        cursor: pointer;
-      }
-
-      nav a:hover {
-        color: var(--primary-color);
+        gap: 15px;
+        margin-bottom: 10px;
       }
 
       .container {
-        flex: 1;
-        max-width: 800px;
-        margin: 60px auto 40px;
-        padding: 0 20px;
-        text-align: center;
+        margin: 40px 15px 30px;
+        padding: 0;
+      }
+
+      header h1 {
+        font-size: 2em;
       }
 
       .container h2 {
-        color: var(--primary-color);
-        font-size: 2em;
-        margin-bottom: 20px;
+        font-size: 1.5em;
       }
+    }
+  </style>
+</head>
+<body>
 
-      .container p {
-        font-size: 1.1em;
-        color: #444;
-        margin-bottom: 30px;
-      }
+  <header>
+    <h1>IT Business Manager dragos stirban boss de boss</h1>
+    <p>Soluție completă pentru analiza și gestionarea activităților unei companii IT</p>
+  </header>
 
-      .cta-button {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 14px 28px;
-        font-size: 1rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: background 0.3s ease, transform 0.2s ease;
-      }
+  <nav>
+    <div>
+      <a href="index.html">Acasă</a>
+      <a onclick="alert('Pagina Despre nu este încă disponibilă')">Despre</a>
+      <a onclick="alert('Pagina Funcționalități nu este încă disponibilă')">Funcționalități</a>
+      <a href="admin.html">Administrare internă</a>
+      <a onclick="alert('Pagina Contact nu este încă disponibilă')">Contact</a>
+    </div>
+    <div>
+      <a onclick="alert('Login momentan indisponibil')">Login</a>
+      <a onclick="alert('Înregistrare momentan indisponibilă')">Înregistrare</a>
+    </div>
+  </nav>
 
-      .cta-button:hover {
-        background-color: #0b5ed7;
-        transform: translateY(-2px);
-      }
+  <main class="container" id="main-content">
+    <!-- Conținutul dinamic va fi încărcat aici -->
+  </main>
 
-      footer {
-        background-color: var(--dark-bg);
-        color: #ccc;
-        text-align: center;
-        padding: 20px;
-        font-size: 0.9em;
-      }
+  <footer>
+    &copy; 2025 IT Business Manager. Toate drepturile rezervate.
+  </footer>
 
-      @media (max-width: 768px) {
-        nav {
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 15px 20px;
-        }
-
-        nav div {
-          gap: 15px;
-          margin-bottom: 10px;
-        }
-
-        .container {
-          margin: 40px 15px 30px;
-          padding: 0;
-        }
-
-        header h1 {
-          font-size: 2em;
-        }
-
-        .container h2 {
-          font-size: 1.5em;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>IT Business Manager dragos stirban boss de boss</h1>
-      <p>
-        Soluție completă pentru analiza și gestionarea activităților unei
-        companii IT
-      </p>
-    </header>
-
-    <nav>
-      <div>
-        <a onclick="loadHome()">Acasă</a>
-        <a onclick="alert('Pagina Despre nu este încă disponibilă')">Despre</a>
-        <a onclick="alert('Pagina Funcționalități nu este încă disponibilă')"
-          >Funcționalități</a
-        >
-        <a href="Administrare Internă.html">Administrare internă</a>
-        <a onclick="alert('Pagina Contact nu este încă disponibilă')"
-          >Contact</a
-        >
-      </div>
-      <div>
-        <a onclick="alert('Login momentan indisponibil')">Login</a>
-        <a onclick="alert('Înregistrare momentan indisponibilă')"
-          >Înregistrare</a
-        >
-      </div>
-    </nav>
-
-    <main class="container" id="main-content">
-      <!-- Conținutul dinamic va fi încărcat aici -->
-    </main>
-
-    <footer>
-      &copy; 2025 IT Business Manager. Toate drepturile rezervate.
-    </footer>
-
-    <script>
-      const homeContent = `
+  <script>
+    const homeContent = `
       <h2>Bine ai venit!</h2>
       <p>Aplicația noastră te ajută să gestionezi eficient procesele de afaceri - de la resurse umane și contabilitate până la marketing și analiză economică.</p>
       <button class="cta-button" onclick="alert('Hai să începem!')">Începe acum</button>
     `;
 
-      function loadHome() {
-        document.getElementById("main-content").innerHTML = homeContent;
-      }
+    function loadHome() {
+      document.getElementById('main-content').innerHTML = homeContent;
+    }
 
-      // Încarcă conținutul Acasă la încărcarea paginii
-      window.onload = loadHome;
-    </script>
-  </body>
+    // Încarcă conținutul Acasă la încărcarea paginii
+    window.onload = loadHome;
+  </script>
+
+</body>
 </html>
