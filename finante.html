@@ -3,59 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Finanțe - ITBM</title>
+  <title>Finanțe - IT Business Manager</title>
   <style>
+    :root {
+      --primary-color: #0d6efd;
+      --accent-color: #0dcaf0;
+      --text-color: #2c3e50;
+      --background-color: #f4f8fb;
+      --dark-bg: #1e1e2f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f8fb;
-      margin: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      animation: fadeIn 0.7s ease-in;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     header {
-      background: linear-gradient(to right, #0d6efd, #0dcaf0);
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
       color: white;
       text-align: center;
-      padding: 40px 20px;
-      border-bottom-left-radius: 30px;
-      border-bottom-right-radius: 30px;
+      padding: 60px 20px;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
+
     nav {
       background-color: white;
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
       flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
+
     .nav-links {
       display: flex;
       gap: 20px;
     }
+
     nav a {
+      color: var(--text-color);
       text-decoration: none;
-      color: #2c3e50;
       font-weight: 600;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 6px;
+      transition: background-color 0.3s, color 0.3s;
     }
+
     nav a:hover {
-      background-color: #0dcaf0;
+      background-color: var(--accent-color);
       color: white;
     }
+
     #logout-btn {
       background-color: #dc3545;
       color: white;
       border: none;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
       cursor: pointer;
+      display: none;
     }
+
     #logout-btn:hover {
       background-color: #bb2d3b;
     }
 
+    #user-msg {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
     .container {
-      max-width: 900px;
+      flex: 1;
+      max-width: 1000px;
       margin: 40px auto;
       padding: 20px;
       background: white;
@@ -65,13 +105,14 @@
 
     h2 {
       text-align: center;
-      color: #0d6efd;
+      color: var(--primary-color);
+      margin-bottom: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     th, td {
@@ -81,7 +122,7 @@
     }
 
     th {
-      background-color: #0d6efd;
+      background-color: var(--primary-color);
       color: white;
     }
 
@@ -104,9 +145,9 @@
     }
 
     button {
-      margin-top: 15px;
+      margin-top: 20px;
       padding: 10px 20px;
-      background-color: #0d6efd;
+      background-color: var(--primary-color);
       color: white;
       border: none;
       border-radius: 6px;
@@ -117,17 +158,19 @@
       background-color: #0b5ed7;
     }
 
-    #user-msg {
+    footer {
+      background-color: var(--dark-bg);
+      color: #ccc;
       text-align: center;
-      font-size: 1.1em;
-      margin: 20px 0;
+      padding: 20px;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Analiză financiară</h1>
+    <h1>Analiză Financiară</h1>
     <p>Monitorizează datele financiare proprii</p>
   </header>
 
@@ -137,15 +180,15 @@
       <a href="despre.html">Despre</a>
       <a href="functionalitate.html">Funcționalități</a>
       <a href="Administrare Internă.html">Administrare Internă</a>
-      <a href="angajati.html">Angajați</a>
       <a href="finante.html"><strong>Finanțe</strong></a>
       <a href="contact.html">Contact</a>
+      <a href="angajati.html" id="angajati-link" style="display:none;">Angajați</a>
     </div>
     <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Înregistrare</a>
     </div>
-    <button id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
+    <button id="logout-btn" onclick="logout()">Logout</button>
   </nav>
 
   <div id="user-msg"></div>
@@ -184,14 +227,22 @@
     </form>
   </div>
 
+  <footer>
+    &copy; 2025 IT Business Manager. Toate drepturile rezervate.
+  </footer>
+
   <script>
     const email = localStorage.getItem("userEmail");
     const nume = localStorage.getItem("userNume");
+    const rol = localStorage.getItem("userRol");
 
     if (email && nume) {
       document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
       document.getElementById("auth-buttons").style.display = "none";
       document.getElementById("logout-btn").style.display = "inline-block";
+      if (rol === "admin") {
+        document.getElementById("angajati-link").style.display = "inline-block";
+      }
       loadTranzactii();
     } else {
       window.location.href = "login.html";
