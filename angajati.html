@@ -61,6 +61,17 @@
     button:hover {
       background-color: #0b5ed7;
     }
+    .delete-btn {
+      background-color: #dc3545;
+      padding: 6px 12px;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background-color: #bb2d3b;
+    }
     #accessDenied {
       color: red;
       text-align: center;
@@ -77,18 +88,16 @@
   </div>
 
   <div id="adminContent" style="display:none;">
-
     <table>
       <thead>
         <tr>
           <th>Nume</th>
           <th>Rol</th>
           <th>Departament</th>
+          <th>Acțiune</th>
         </tr>
       </thead>
-      <tbody id="tabelAngajati">
-        <!-- Datele vor fi adăugate dinamic -->
-      </tbody>
+      <tbody id="tabelAngajati"></tbody>
     </table>
 
     <form id="formularAngajat">
@@ -103,7 +112,6 @@
 
       <button type="submit">Adaugă angajat</button>
     </form>
-
   </div>
 
   <script>
@@ -115,7 +123,48 @@
       document.getElementById("accessDenied").style.display = "block";
     }
 
-    document.getElementById('formularAngajat').addEventListener('submit', async function (e) {
+    async function loadAngajati() {
+      try {
+        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getEmployees");
+        const data = await res.json();
+        const tabel = document.getElementById("tabelAngajati");
+        tabel.innerHTML = '';
+
+        data.forEach(emp => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${emp.nume}</td>
+            <td>${emp.rol}</td>
+            <td>${emp.departament}</td>
+            <td><button class="delete-btn" onclick="stergeAngajat('${emp.nume}')">Șterge</button></td>
+          `;
+          tabel.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("❌ Eroare la încărcarea angajaților:", err);
+      }
+    }
+
+    async function stergeAngajat(nume) {
+      if (!confirm(`Ești sigur că vrei să ștergi ${nume}?`)) return;
+
+      try {
+        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/deleteEmployee", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nume })
+        });
+
+        const text = await res.text();
+        alert(text);
+        loadAngajati();
+      } catch (err) {
+        alert("Eroare la ștergere.");
+      }
+    }
+
+    document.getElementById('formularAngajat').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const nume = document.getElementById('nume').value;
@@ -123,26 +172,18 @@
       const departament = document.getElementById('departament').value;
 
       try {
-        const response = await fetch("https://itbm-register-func.azurewebsites.net/api/addEmployee", {
+        await fetch("https://itbm-register-func.azurewebsites.net/api/addEmployee", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nume, rol, departament })
         });
 
-        const text = await response.text();
-        alert(text);
-
-        if (response.ok) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${nume}</td><td>${rol}</td><td>${departament}</td>`;
-          document.getElementById('tabelAngajati').appendChild(tr);
-          this.reset();
-        }
-      } catch (error) {
-        alert("❌ Eroare la conectare.");
+        loadAngajati();
+        this.reset();
+      } catch (err) {
+        alert("Eroare la adăugare.");
       }
     });
-  </script>
 
-</body>
-</html>
+    // Încarcă angajații la pornirea paginii
+    if (rol === "admin") {
