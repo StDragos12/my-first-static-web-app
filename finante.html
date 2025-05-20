@@ -308,41 +308,55 @@
       }
     });
 
-    function drawChart(data) {
-      const ctx = document.getElementById("financeChart").getContext("2d");
+  function drawChart(data) {
+  const ctx = document.getElementById("financeChart").getContext("2d");
 
-      const monthlyTotals = data.reduce((acc, entry) => {
-        const month = entry.data.slice(0, 7);
-        acc[month] = (acc[month] || 0) + parseFloat(entry.valoare);
-        return acc;
-      }, {});
+  const venituri = {};
+  const cheltuieli = {};
 
-      const labels = Object.keys(monthlyTotals).sort();
-      const values = labels.map(month => monthlyTotals[month]);
+  data.forEach(entry => {
+    const luna = entry.data.slice(0, 7);
+    const suma = parseFloat(entry.valoare);
 
-      if (window.financeChart) window.financeChart.destroy();
-
-      window.financeChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Total lunar (lei)',
-            data: values,
-            borderColor: '#0d6efd',
-            borderWidth: 2,
-            fill: false,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true }
-          }
-        }
-      });
+    if (entry.tip.toLowerCase() === "venit") {
+      venituri[luna] = (venituri[luna] || 0) + suma;
+    } else if (entry.tip.toLowerCase() === "cheltuială" || entry.tip.toLowerCase() === "cheltuiala") {
+      cheltuieli[luna] = (cheltuieli[luna] || 0) + suma;
     }
+  });
+
+  const toateLunile = Array.from(new Set([...Object.keys(venituri), ...Object.keys(cheltuieli)])).sort();
+  const venituriData = toateLunile.map(luna => venituri[luna] || 0);
+  const cheltuieliData = toateLunile.map(luna => cheltuieli[luna] || 0);
+
+  if (window.financeChart) window.financeChart.destroy();
+
+  window.financeChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: toateLunile,
+      datasets: [
+        {
+          label: 'Venituri',
+          data: venituriData,
+          backgroundColor: 'rgba(13, 110, 253, 0.6)'
+        },
+        {
+          label: 'Cheltuieli',
+          data: cheltuieliData,
+          backgroundColor: 'rgba(220, 53, 69, 0.6)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
   </script>
 
 </body>
