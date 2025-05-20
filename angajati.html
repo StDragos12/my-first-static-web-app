@@ -87,16 +87,7 @@
         </tr>
       </thead>
       <tbody id="tabelAngajati">
-        <tr>
-          <td>Popescu Andrei</td>
-          <td>Dezvoltator</td>
-          <td>IT</td>
-        </tr>
-        <tr>
-          <td>Marinescu Ioana</td>
-          <td>Contabil</td>
-          <td>Financiar</td>
-        </tr>
+        <!-- Datele vor fi adăugate dinamic -->
       </tbody>
     </table>
 
@@ -124,19 +115,32 @@
       document.getElementById("accessDenied").style.display = "block";
     }
 
-    // Adaugă angajat local (temporar)
-    document.getElementById('formularAngajat').addEventListener('submit', function(e) {
+    document.getElementById('formularAngajat').addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const nume = document.getElementById('nume').value;
       const rol = document.getElementById('rol').value;
       const departament = document.getElementById('departament').value;
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${nume}</td><td>${rol}</td><td>${departament}</td>`;
-      document.getElementById('tabelAngajati').appendChild(tr);
+      try {
+        const response = await fetch("https://itbm-register-func.azurewebsites.net/api/addEmployee", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nume, rol, departament })
+        });
 
-      this.reset();
+        const text = await response.text();
+        alert(text);
+
+        if (response.ok) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${nume}</td><td>${rol}</td><td>${departament}</td>`;
+          document.getElementById('tabelAngajati').appendChild(tr);
+          this.reset();
+        }
+      } catch (error) {
+        alert("❌ Eroare la conectare.");
+      }
     });
   </script>
 
