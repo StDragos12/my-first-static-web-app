@@ -73,9 +73,29 @@
       color: white;
     }
 
+    #logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #logout-btn:hover {
+      background-color: #bb2d3b;
+    }
+
+    #user-msg {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
     .container {
       flex: 1;
-      max-width: 1100px;
+      max-width: 900px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -159,13 +179,17 @@
       <a href="functionalitate.html">Funcționalități</a>
       <a href="Administrare Internă.html">Administrare Internă</a>
       <a href="finante.html">Finanțe</a>
-      <a href="contact.html">Contact</a>
+      <a href="contact.html"><strong>Contact</strong></a>
+      <a href="angajati.html" id="angajati-link" style="display:none;">Angajați</a>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Înregistrare</a>
     </div>
+    <button id="logout-btn" onclick="logout()">Logout</button>
   </nav>
+
+  <div id="user-msg"></div>
 
   <main class="container">
     <h2>Trimite-ne un mesaj</h2>
@@ -191,6 +215,28 @@
   <footer>
     &copy; 2025 IT Business Manager. Toate drepturile rezervate.
   </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const nume = localStorage.getItem("userNume");
+      const rol = localStorage.getItem("userRol");
+
+      if (nume) {
+        document.getElementById("auth-buttons").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
+        document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
+
+        if (rol === "admin") {
+          document.getElementById("angajati-link").style.display = "inline-block";
+        }
+      }
+    });
+
+    function logout() {
+      localStorage.clear();
+      window.location.reload();
+    }
+  </script>
 
 </body>
 </html>
