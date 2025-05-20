@@ -41,7 +41,7 @@
       padding: 60px 20px;
       border-bottom-left-radius: 40px;
       border-bottom-right-radius: 40px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     nav {
@@ -158,6 +158,10 @@
       background-color: #0b5ed7;
     }
 
+    canvas {
+      margin-top: 40px;
+    }
+
     footer {
       background-color: var(--dark-bg);
       color: #ccc;
@@ -201,13 +205,11 @@
         <tr>
           <th>Data</th>
           <th>Tip</th>
-          <th>Sumă (lei)</th>
-          <th>Descriere</th>
+          <th>Valoare (lei)</th>
+          <th>Categorie</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Tranzacții încărcate din baza de date -->
-      </tbody>
+      <tbody></tbody>
     </table>
 
     <form id="formularFinante">
@@ -217,20 +219,23 @@
       <label for="tip">Tip (Venit / Cheltuială):</label>
       <input type="text" id="tip" required>
 
-      <label for="suma">Sumă:</label>
-      <input type="number" id="suma" required>
+      <label for="categorie">Categorie:</label>
+      <input type="text" id="categorie" required>
 
-      <label for="descriere">Descriere:</label>
-      <input type="text" id="descriere" required>
+      <label for="valoare">Valoare:</label>
+      <input type="number" id="valoare" required>
 
       <button type="submit">Adaugă tranzacție</button>
     </form>
+
+    <canvas id="financeChart" height="100"></canvas>
   </div>
 
   <footer>
     &copy; 2025 IT Business Manager. Toate drepturile rezervate.
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const email = localStorage.getItem("userEmail");
     const nume = localStorage.getItem("userNume");
@@ -243,7 +248,7 @@
       if (rol === "admin") {
         document.getElementById("angajati-link").style.display = "inline-block";
       }
-      loadTranzactii();
+      loadFinante();
     } else {
       window.location.href = "login.html";
     }
@@ -253,49 +258,91 @@
       window.location.href = "login.html";
     }
 
-    async function loadTranzactii() {
+    async function loadFinante() {
       try {
-        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getTransactions?email=" + encodeURIComponent(email));
+        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getFinanceEntries?email=" + encodeURIComponent(email));
         const data = await res.json();
+
         const tabel = document.querySelector("#tabelFinante tbody");
         tabel.innerHTML = "";
-        data.forEach(tr => {
+
+        data.forEach(item => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${tr.data}</td>
-            <td>${tr.tip}</td>
-            <td>${tr.suma}</td>
-            <td>${tr.descriere}</td>
+            <td>${item.data}</td>
+            <td>${item.tip}</td>
+            <td>${item.valoare}</td>
+            <td>${item.categorie}</td>
           `;
           tabel.appendChild(row);
         });
+
+        drawChart(data);
       } catch (err) {
-        console.error("Eroare la încărcarea tranzacțiilor", err);
+        console.error("Eroare la încărcarea datelor financiare:", err);
       }
     }
 
-    document.getElementById("formularFinante").addEventListener("submit", async function(e) {
+    document.getElementById("formularFinante").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const tranzactie = {
-        email,
-        data: document.getElementById("data").value,
+
+      const entry = {
+        user_email: email,
         tip: document.getElementById("tip").value,
-        suma: document.getElementById("suma").value,
-        descriere: document.getElementById("descriere").value
+        categorie: document.getElementById("categorie").value,
+        valoare: parseFloat(document.getElementById("valoare").value),
+        data: document.getElementById("data").value
       };
 
       try {
-        await fetch("https://itbm-register-func.azurewebsites.net/api/addTransaction", {
+        await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(tranzactie)
+          body: JSON.stringify(entry)
         });
-        loadTranzactii();
+
+        loadFinante();
         this.reset();
       } catch (err) {
         alert("Eroare la adăugare.");
       }
     });
+
+    function drawChart(data) {
+      const ctx = document.getElementById("financeChart").getContext("2d");
+
+      const monthlyTotals = data.reduce((acc, entry) => {
+        const month = entry.data.slice(0, 7);
+        acc[month] = (acc[month] || 0) + parseFloat(entry.valoare);
+        return acc;
+      }, {});
+
+      const labels = Object.keys(monthlyTotals).sort();
+      const values = labels.map(month => monthlyTotals[month]);
+
+      if (window.financeChart) window.financeChart.destroy();
+
+      window.financeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Total lunar (lei)',
+            data: values,
+            borderColor: '#0d6efd',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
   </script>
 
 </body>
