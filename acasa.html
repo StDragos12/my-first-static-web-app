@@ -3,232 +3,141 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Acasă - IT Business Manager</title>
+  <title>Administrare Angajați</title>
   <style>
-    :root {
-      --primary-color: #0d6efd;
-      --accent-color: #0dcaf0;
-      --text-color: #2c3e50;
-      --background-color: #f4f8fb;
-      --dark-bg: #1e1e2f;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      animation: fadeIn 0.7s ease-in;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    header {
-      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-      color: white;
-      text-align: center;
-      padding: 60px 20px;
-      border-bottom-left-radius: 40px;
-      border-bottom-right-radius: 40px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    nav {
-      background-color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-    }
-
-    nav a {
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    nav a:hover {
-      background-color: var(--accent-color);
-      color: white;
-    }
-
-    #logout-btn {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: none;
-    }
-
-    #logout-btn:hover {
-      background-color: #bb2d3b;
-    }
-
-    #user-msg {
-      text-align: center;
-      font-size: 1.2rem;
-      margin: 10px 0;
-    }
-
-    .container {
-      flex: 1;
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-      text-align: center;
-    }
-
     h2 {
-      color: var(--primary-color);
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    p {
-      font-size: 1.1em;
+      color: #0d6efd;
+      text-align: center;
       margin-bottom: 30px;
     }
-
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 40px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
     }
-
-    .feature {
-      background: white;
-      padding: 20px;
-      width: 280px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
     }
-
-    .feature h3 {
-      color: var(--primary-color);
-      margin-bottom: 10px;
-    }
-
-    .cta-button {
-      margin-top: 40px;
-      background-color: var(--primary-color);
+    th {
+      background-color: #0d6efd;
       color: white;
-      padding: 14px 28px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      text-decoration: none;
-      display: inline-block;
     }
-
-    .cta-button:hover {
-      background-color: #0b5ed7;
-      transform: translateY(-2px);
-    }
-
-    footer {
-      background-color: var(--dark-bg);
-      color: #ccc;
-      text-align: center;
+    form {
+      background-color: white;
       padding: 20px;
-      font-size: 0.9em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b5ed7;
+    }
+    #accessDenied {
+      color: red;
+      text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Bine ai revenit la IT Business Manager</h1>
-    <p>Un partener de încredere pentru digitalizarea afacerii tale</p>
-  </header>
+  <h2>👨‍💼 Administrare Angajați</h2>
 
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Acasă</a>
-      <a href="despre.html">Despre</a>
-      <a href="functionalitate.html">Funcționalități</a>
-      <a href="Administrare Internă.html">Administrare Internă</a>
-      <a href="contact.html">Contact</a>
-      <a href="angajati.html" id="angajati-link" style="display: none;">Angajați</a>
-    </div>
-    <div class="nav-links" id="auth-buttons">
-      <a href="login.html">Login</a>
-      <a href="register.html">Înregistrare</a>
-    </div>
-    <button id="logout-btn" onclick="logout()">Logout</button>
-  </nav>
+  <div id="accessDenied" style="display:none;">
+    Acces interzis. Această pagină este destinată doar administratorilor.
+  </div>
 
-  <div id="user-msg"></div>
+  <div id="adminContent" style="display:none;">
 
-  <main class="container">
-    <h2>Ce poți face cu IT Business Manager</h2>
-    <p>Accesează uneltele potrivite pentru o companie IT modernă.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Nume</th>
+          <th>Rol</th>
+          <th>Departament</th>
+        </tr>
+      </thead>
+      <tbody id="tabelAngajati">
+        <tr>
+          <td>Popescu Andrei</td>
+          <td>Dezvoltator</td>
+          <td>IT</td>
+        </tr>
+        <tr>
+          <td>Marinescu Ioana</td>
+          <td>Contabil</td>
+          <td>Financiar</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div class="features">
-      <div class="feature">
-        <h3>Consultanță tehnologică</h3>
-        <p>Identificăm soluții scalabile și moderne pentru optimizarea arhitecturii IT, dezvoltare și digitalizare.</p>
-      </div>
-      <div class="feature">
-        <h3>Outsourcing IT</h3>
-        <p>Asigurăm echipe dedicate pentru dezvoltare, suport și operațiuni tehnice cu livrare garantată.</p>
-      </div>
-      <div class="feature">
-        <h3>Produse software proprii</h3>
-        <p>Dezvoltăm și oferim aplicații performante pentru ERP, CRM, suport și automatizare procese.</p>
-      </div>
-    </div>
+    <form id="formularAngajat">
+      <label for="nume">Nume angajat:</label>
+      <input type="text" id="nume" required>
 
-    <a class="cta-button" href="functionalitate.html">Accesează platforma</a>
-  </main>
+      <label for="rol">Rol:</label>
+      <input type="text" id="rol" required>
 
-  <footer>
-    &copy; 2025 IT Business Manager. Toate drepturile rezervate.
-  </footer>
+      <label for="departament">Departament:</label>
+      <input type="text" id="departament" required>
+
+      <button type="submit">Adaugă angajat</button>
+    </form>
+
+  </div>
 
   <script>
-    const nume = localStorage.getItem("userNume");
     const rol = localStorage.getItem("userRol");
 
-    if (nume) {
-      document.getElementById("auth-buttons").style.display = "none";
-      document.getElementById("logout-btn").style.display = "inline-block";
-      document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
-      if (rol === "admin") {
-        document.getElementById("angajati-link").style.display = "inline-block";
-      }
+    if (rol === "admin") {
+      document.getElementById("adminContent").style.display = "block";
+    } else {
+      document.getElementById("accessDenied").style.display = "block";
     }
 
-    function logout() {
-      localStorage.clear();
-      window.location.reload();
-    }
+    // Adaugă angajat local (temporar)
+    document.getElementById('formularAngajat').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nume = document.getElementById('nume').value;
+      const rol = document.getElementById('rol').value;
+      const departament = document.getElementById('departament').value;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${nume}</td><td>${rol}</td><td>${departament}</td>`;
+      document.getElementById('tabelAngajati').appendChild(tr);
+
+      this.reset();
+    });
   </script>
 
 </body>
