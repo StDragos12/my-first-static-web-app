@@ -73,6 +73,26 @@
       color: white;
     }
 
+    #logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #logout-btn:hover {
+      background-color: #bb2d3b;
+    }
+
+    #user-msg {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
     .container {
       flex: 1;
       max-width: 1100px;
@@ -154,37 +174,37 @@
       <a href="administrare_interna.html">Administrare Internă</a>
       <a href="finante.html">Finanțe</a>
       <a href="contact.html">Contact</a>
+      <a href="angajati.html" id="angajati-link" style="display: none;">Angajați</a>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Înregistrare</a>
     </div>
+    <button id="logout-btn" onclick="logout()">Logout</button>
   </nav>
+
+  <div id="user-msg"></div>
 
   <main class="container">
     <div class="section">
       <h3>Echipa de Administrare Internă</h3>
       <div class="admin-photo"></div>
-      <p><strong>Dragoș</strong> și <strong>Alex</strong> conduc activitatea internă a platformei IT Business Manager. Împreună, aceștia oferă direcție strategică și asigură funcționarea optimă a tuturor proceselor esențiale.</p>
-      <p>Dragoș gestionează componenta tehnologică și automatizarea proceselor, în timp ce Alex supervizează partea operațională și resursele umane. Împreună, formează o echipă echilibrată care pune accent pe inovație, disciplină și rezultate măsurabile.</p>
+      <p><strong>Dragoș</strong> și <strong>Alex</strong> conduc activitatea internă a platformei IT Business Manager...</p>
     </div>
 
     <div class="section">
       <h3>Procese Interne</h3>
-      <p>Procesele interne sunt structurate pentru a eficientiza fiecare pas din fluxul operațional. Fiecare etapă este documentată și supusă unor indicatori de performanță clari (KPIs).</p>
-      <p>Platforma oferă automatizări, task management și alerte, toate integrate într-un sistem centralizat. Echipa de administrare monitorizează constant aceste procese și propune optimizări lunare pentru a reduce timpul de execuție și erorile operaționale.</p>
+      <p>Procesele interne sunt structurate pentru a eficientiza fiecare pas din fluxul operațional...</p>
     </div>
 
     <div class="section">
       <h3>Gestionare Documente</h3>
-      <p>Fiecare document este clasificat automat în funcție de tip, autor și stadiu de aprobare. Utilizatorii au acces securizat și auditabil la toate fișierele, iar documentele pot fi semnate digital direct din platformă.</p>
-      <p>Sistemul de versionare permite urmărirea fiecărei modificări, iar backupul se face automat la intervale prestabilite. Politicile GDPR și ISO sunt implementate și verificate periodic.</p>
+      <p>Fiecare document este clasificat automat în funcție de tip, autor și stadiu de aprobare...</p>
     </div>
 
     <div class="section">
       <h3>Politici Interne</h3>
-      <p>Fiecare departament lucrează după un set clar de reguli interne. De la codul de conduită până la politicile de securitate, toate sunt disponibile într-un portal dedicat.</p>
-      <p>Administratorii se ocupă de adaptarea acestor politici în funcție de dinamica echipei și schimbările legislative. Angajații sunt notificați automat când o politică este modificată, asigurând transparență și aliniere organizațională.</p>
+      <p>Fiecare departament lucrează după un set clar de reguli interne...</p>
     </div>
   </main>
 
@@ -192,5 +212,21 @@
     &copy; 2025 IT Business Manager. Toate drepturile rezervate.
   </footer>
 
-</body>
-</html>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const nume = localStorage.getItem("userNume");
+      const rol = localStorage.getItem("userRol");
+
+      if (nume) {
+        document.getElementById("auth-buttons").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
+        document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
+
+        if (rol === "admin") {
+          document.getElementById("angajati-link").style.display = "inline-block";
+        }
+      }
+    });
+
+    function logout() {
+      localStorage.clear();
