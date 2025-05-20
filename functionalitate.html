@@ -73,6 +73,26 @@
       color: white;
     }
 
+    #logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #logout-btn:hover {
+      background-color: #bb2d3b;
+    }
+
+    #user-msg {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
     .tabs {
       display: flex;
       justify-content: center;
@@ -167,12 +187,16 @@
       <a href="Administrare Internă.html">Administrare Internă</a>
       <a href="finante.html">Finanțe</a>
       <a href="contact.html">Contact</a>
+      <a href="angajati.html" id="angajati-link" style="display: none;">Angajați</a>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Înregistrare</a>
     </div>
+    <button id="logout-btn" onclick="logout()">Logout</button>
   </nav>
+
+  <div id="user-msg"></div>
 
   <div class="tabs">
     <button class="tab-btn active" onclick="showTab('consultanta')">Consultanță</button>
@@ -184,68 +208,32 @@
     <h2>Consultanță Tehnologică</h2>
     <p>Oferim suport end-to-end pentru digitalizarea completă a companiilor tech prin soluții de infrastructură, securitate și strategie.</p>
     <div class="feature-grid">
-      <div class="feature-box">
-        <h3>Analiză IT & plan strategic</h3>
-        <p>Evaluăm arhitectura IT curentă, stabilim priorități, KPIs și identificăm tehnologii moderne pentru optimizarea costurilor și a eficienței.</p>
-      </div>
-      <div class="feature-box">
-        <h3>Optimizare procese digitale</h3>
-        <p>Reducem timpii de execuție prin RPA, API integration și workflow-uri automatizate ce reduc erorile umane și cresc productivitatea.</p>
-      </div>
-      <div class="feature-box">
-        <h3>Consultanță securitate</h3>
-        <p>Realizăm audituri tehnice, simulări de penetrare, și creăm politici de protecție pentru infrastructura cloud și locală.</p>
-      </div>
-      <div class="feature-box">
-        <h3>Arhitectură cloud</h3>
-        <p>De la migrare la microservicii până la integrarea CI/CD pipelines, creăm o infrastructură scalabilă și fiabilă.</p>
-      </div>
+      <div class="feature-box"><h3>Analiză IT & plan strategic</h3><p>Evaluăm arhitectura IT curentă...</p></div>
+      <div class="feature-box"><h3>Optimizare procese digitale</h3><p>Reducem timpii de execuție prin RPA...</p></div>
+      <div class="feature-box"><h3>Consultanță securitate</h3><p>Realizăm audituri tehnice...</p></div>
+      <div class="feature-box"><h3>Arhitectură cloud</h3><p>De la migrare la microservicii...</p></div>
     </div>
   </div>
 
   <div id="outsourcing" class="tab-content">
     <h2>Outsourcing IT complet</h2>
-    <p>Preluăm integral operațiunile IT prin echipe externalizate care asigură scalabilitate, expertiză continuă și reducerea riscurilor.</p>
+    <p>Preluăm integral operațiunile IT prin echipe externalizate...</p>
     <div class="feature-grid">
-      <div class="feature-box">
-        <h3>Dezvoltare software Agile</h3>
-        <p>Furnizăm echipe cross-functionale ce folosesc tehnologii moderne (React, Node, .NET) și procese Scrum.</p>
-      </div>
-      <div class="feature-box">
-        <h3>Suport Helpdesk 24/7</h3>
-        <p>Disponibilitate non-stop pentru rezolvarea rapidă a incidentelor, remote access, ticketing și SLA garantat.</p>
-      </div>
-      <div class="feature-box">
-        <h3>Administrare servere & cloud</h3>
-        <p>Gestionăm infrastructuri hibride, monitorizăm uptime-ul și automatizăm procesele de backup și scaling.</p>
-      </div>
-      <div class="feature-box">
-        <h3>Testare & QA externalizat</h3>
-        <p>Testare manuală și automatizată (Selenium, Cypress), regresii, testări de performanță și raportare continuă.</p>
-      </div>
+      <div class="feature-box"><h3>Dezvoltare software Agile</h3><p>Furnizăm echipe cross-functionale...</p></div>
+      <div class="feature-box"><h3>Suport Helpdesk 24/7</h3><p>Disponibilitate non-stop...</p></div>
+      <div class="feature-box"><h3>Administrare servere & cloud</h3><p>Gestionăm infrastructuri hibride...</p></div>
+      <div class="feature-box"><h3>Testare & QA externalizat</h3><p>Testare manuală și automatizată...</p></div>
     </div>
   </div>
 
   <div id="produse" class="tab-content">
     <h2>Produse dezvoltate intern</h2>
-    <p>Software-ul propriu este construit pe baza nevoilor reale ale clienților din industria IT pentru eficiență și scalabilitate.</p>
+    <p>Software-ul propriu este construit pe baza nevoilor reale ale clienților...</p>
     <div class="feature-grid">
-      <div class="feature-box">
-        <h3>ITBM Suite ERP</h3>
-        <p>Un ERP modular pentru companii IT, include gestiune resurse, salarizare, facturare, management proiecte și integrare BI dashboards.</p>
-      </div>
-      <div class="feature-box">
-        <h3>DevBoard.ai</h3>
-        <p>O platformă AI-driven pentru managementul echipelor Agile, cu sugestii inteligente pentru backlog și prioritizare sprinturi.</p>
-      </div>
-      <div class="feature-box">
-        <h3>ClientCare360</h3>
-        <p>Soluție CRM care integrează e-mail, suport chat, follow-up automatizat și analize de satisfacție client prin dashboard-uri intuitive.</p>
-      </div>
-      <div class="feature-box">
-        <h3>SysHealth Monitor</h3>
-        <p>Aplicație de monitorizare servere & aplicații, alerte instant prin Slack/Teams, loguri centralizate și dashboard live.</p>
-      </div>
+      <div class="feature-box"><h3>ITBM Suite ERP</h3><p>Un ERP modular pentru companii IT...</p></div>
+      <div class="feature-box"><h3>DevBoard.ai</h3><p>O platformă AI-driven pentru management Agile...</p></div>
+      <div class="feature-box"><h3>ClientCare360</h3><p>Soluție CRM care integrează e-mail, suport chat...</p></div>
+      <div class="feature-box"><h3>SysHealth Monitor</h3><p>Monitorizare servere & aplicații...</p></div>
     </div>
   </div>
 
@@ -261,6 +249,26 @@
       buttons.forEach(b => b.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       event.target.classList.add('active');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const nume = localStorage.getItem("userNume");
+      const rol = localStorage.getItem("userRol");
+
+      if (nume) {
+        document.getElementById("auth-buttons").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
+        document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
+
+        if (rol === "admin") {
+          document.getElementById("angajati-link").style.display = "inline-block";
+        }
+      }
+    });
+
+    function logout() {
+      localStorage.clear();
+      window.location.reload();
     }
   </script>
 
