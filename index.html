@@ -241,17 +241,25 @@
   </footer>
 
   <script>
-    const nume = localStorage.getItem("userNume");
-    const rol = localStorage.getItem("userRol");
+    document.addEventListener("DOMContentLoaded", function () {
+      const nume = localStorage.getItem("userNume");
+      const rol = localStorage.getItem("userRol");
 
-    if (nume) {
-      document.getElementById("auth-buttons").style.display = "none";
-      document.getElementById("logout-btn").style.display = "inline-block";
-      document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
-      if (rol === "admin") {
-        document.getElementById("angajati-link").style.display = "inline-block";
+      if (nume) {
+        const authButtons = document.getElementById("auth-buttons");
+        const logoutBtn = document.getElementById("logout-btn");
+        const userMsg = document.getElementById("user-msg");
+        const angajatiLink = document.getElementById("angajati-link");
+
+        if (authButtons) authButtons.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "inline-block";
+        if (userMsg) userMsg.innerText = `Bun venit, ${nume}!`;
+
+        if (rol === "admin" && angajatiLink) {
+          angajatiLink.style.display = "inline-block";
+        }
       }
-    }
+    });
 
     function logout() {
       localStorage.clear();
