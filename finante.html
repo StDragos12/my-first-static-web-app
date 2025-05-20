@@ -95,12 +95,12 @@
 
     .container {
       flex: 1;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 40px auto;
-      padding: 30px;
+      padding: 40px;
       background: white;
       border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
 
     h2 {
@@ -136,7 +136,6 @@
       font-weight: bold;
       display: block;
       margin-top: 15px;
-      font-size: 1rem;
     }
 
     input {
@@ -145,7 +144,6 @@
       margin-top: 6px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 1rem;
     }
 
     button {
@@ -163,8 +161,20 @@
       background-color: #0b5ed7;
     }
 
+    #exportCSV {
+      margin-top: 30px;
+      display: block;
+      font-size: 1rem;
+      background-color: #198754;
+    }
+
+    #exportCSV:hover {
+      background-color: #146c43;
+    }
+
     canvas {
-      margin-top: 50px;
+      margin-top: 60px;
+      height: 500px !important;
     }
 
     footer {
@@ -217,6 +227,8 @@
       <tbody></tbody>
     </table>
 
+    <button id="exportCSV">Exportă în CSV</button>
+
     <form id="formularFinante">
       <label for="data">Data:</label>
       <input type="date" id="data" required>
@@ -233,7 +245,7 @@
       <button type="submit">Adaugă tranzacție</button>
     </form>
 
-    <canvas id="financeChart" height="100"></canvas>
+    <canvas id="financeChart"></canvas>
   </div>
 
   <footer>
@@ -263,7 +275,6 @@
 
       document.getElementById("formularFinante").addEventListener("submit", async function (e) {
         e.preventDefault();
-
         const entry = {
           user_email: email,
           tip: document.getElementById("tip").value,
@@ -284,6 +295,20 @@
         } catch (err) {
           alert("Eroare la adăugare.");
         }
+      });
+
+      document.getElementById("exportCSV").addEventListener("click", () => {
+        const rows = [["Data", "Tip", "Valoare", "Categorie"]];
+        document.querySelectorAll("#tabelFinante tbody tr").forEach(tr => {
+          const row = Array.from(tr.children).map(td => td.innerText);
+          rows.push(row);
+        });
+        const csvContent = rows.map(e => e.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "tranzactii.csv";
+        link.click();
       });
     });
 
@@ -316,44 +341,30 @@
     function drawChart(data) {
       const ctx = document.getElementById("financeChart").getContext("2d");
 
-      const venituri = {};
-      const cheltuieli = {};
-
+      const venituri = {}, cheltuieli = {};
       data.forEach(entry => {
         const luna = entry.data.slice(0, 7);
         const suma = parseFloat(entry.valoare);
-        const tip = entry.tip.toLowerCase();
-
-        if (tip === "venit") {
+        if (entry.tip.toLowerCase() === "venit") {
           venituri[luna] = (venituri[luna] || 0) + suma;
         } else {
           cheltuieli[luna] = (cheltuieli[luna] || 0) + suma;
         }
       });
 
-      const lunile = Array.from(new Set([...Object.keys(venituri), ...Object.keys(cheltuieli)])).sort();
-      const venituriData = lunile.map(luna => venituri[luna] || 0);
-      const cheltuieliData = lunile.map(luna => cheltuieli[luna] || 0);
+      const luni = Array.from(new Set([...Object.keys(venituri), ...Object.keys(cheltuieli)])).sort();
+      const venituriData = luni.map(l => venituri[l] || 0);
+      const cheltuieliData = luni.map(l => cheltuieli[l] || 0);
 
-      if (financeChart instanceof Chart) {
-        financeChart.destroy();
-      }
+      if (financeChart) financeChart.destroy();
 
       financeChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: lunile,
+          labels: luni,
           datasets: [
-            {
-              label: 'Venituri',
-              data: venituriData,
-              backgroundColor: 'rgba(13, 110, 253, 0.6)'
-            },
-            {
-              label: 'Cheltuieli',
-              data: cheltuieliData,
-              backgroundColor: 'rgba(220, 53, 69, 0.6)'
-            }
+            { label: "Venituri", data: venituriData, backgroundColor: 'rgba(13, 110, 253, 0.6)' },
+            { label: "Cheltuieli", data: cheltuieliData, backgroundColor: 'rgba(220, 53, 69, 0.6)' }
           ]
         },
         options: {
