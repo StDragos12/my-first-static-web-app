@@ -119,6 +119,7 @@
 
     if (rol === "admin") {
       document.getElementById("adminContent").style.display = "block";
+      loadAngajati(); // ← apelăm imediat după afișare
     } else {
       document.getElementById("accessDenied").style.display = "block";
     }
@@ -184,6 +185,7 @@
         alert("Eroare la adăugare.");
       }
     });
+  </script>
 
-    // Încarcă angajații la pornirea paginii
-    if (rol === "admin") {
+</body>
+</html>
