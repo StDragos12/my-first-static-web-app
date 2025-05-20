@@ -92,7 +92,7 @@
         const response = await fetch("https://itbm-register-func.azurewebsites.net/api/registerUser", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nume, email, parola: parola_hash })
+          body: JSON.stringify({ nume, email, parola_hash })
         });
 
         const statusText = document.getElementById('status');
