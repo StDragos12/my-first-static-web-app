@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autentificare - ITBM</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      padding: 40px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #0d6efd;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #0d6efd;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b5ed7;
+    }
+    .status {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Autentificare</h2>
+
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="parola">Parolă:</label>
+    <input type="password" id="parola" name="parola" required>
+
+    <button type="submit">Autentifică-te</button>
+    <div class="status" id="status"></div>
+  </form>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const parola = document.getElementById('parola').value;
+
+      const encoder = new TextEncoder();
+      const data = encoder.encode(parola);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const parola_hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+      try {
+        const response = await fetch("https://itbm-register-func.azurewebsites.net/api/loginUser", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, parola_hash })
+        });
+
+        const statusText = document.getElementById('status');
+        if (response.ok) {
+          const result = await response.json();
+          statusText.innerText = "✔️ Autentificare reușită!";
+          statusText.style.color = "green";
+          // Salvăm în localStorage
+          localStorage.setItem("userEmail", result.email);
+          localStorage.setItem("userNume", result.nume);
+          // Redirect
+          window.location.href = "acasa.html";
+        } else {
+          const msg = await response.text();
+          statusText.innerText = "❌ " + msg;
+          statusText.style.color = "red";
+        }
+      } catch (err) {
+        document.getElementById('status').innerText = "Eroare la conectare.";
+        document.getElementById('status').style.color = "red";
+      }
+    });
+  </script>
+
+</body>
+</html>
