@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Administrare Angajați</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h2 {
+      color: #0d6efd;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #0d6efd;
+      color: white;
+    }
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b5ed7;
+    }
+    #accessDenied {
+      color: red;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>👨‍💼 Administrare Angajați</h2>
+
+  <div id="accessDenied" style="display:none;">
+    Acces interzis. Această pagină este destinată doar administratorilor.
+  </div>
+
+  <div id="adminContent" style="display:none;">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nume</th>
+          <th>Rol</th>
+          <th>Departament</th>
+        </tr>
+      </thead>
+      <tbody id="tabelAngajati">
+        <tr>
+          <td>Popescu Andrei</td>
+          <td>Dezvoltator</td>
+          <td>IT</td>
+        </tr>
+        <tr>
+          <td>Marinescu Ioana</td>
+          <td>Contabil</td>
+          <td>Financiar</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <form id="formularAngajat">
+      <label for="nume">Nume angajat:</label>
+      <input type="text" id="nume" required>
+
+      <label for="rol">Rol:</label>
+      <input type="text" id="rol" required>
+
+      <label for="departament">Departament:</label>
+      <input type="text" id="departament" required>
+
+      <button type="submit">Adaugă angajat</button>
+    </form>
+
+  </div>
+
+  <script>
+    const rol = localStorage.getItem("userRol");
+
+    if (rol === "admin") {
+      document.getElementById("adminContent").style.display = "block";
+    } else {
+      document.getElementById("accessDenied").style.display = "block";
+    }
+
+    // Adaugă angajat local (temporar)
+    document.getElementById('formularAngajat').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nume = document.getElementById('nume').value;
+      const rol = document.getElementById('rol').value;
+      const departament = document.getElementById('departament').value;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${nume}</td><td>${rol}</td><td>${departament}</td>`;
+      document.getElementById('tabelAngajati').appendChild(tr);
+
+      this.reset();
+    });
+  </script>
+
+</body>
+</html>
