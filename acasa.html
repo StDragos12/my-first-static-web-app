@@ -73,6 +73,26 @@
       color: white;
     }
 
+    #logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #logout-btn:hover {
+      background-color: #bb2d3b;
+    }
+
+    #user-msg {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
     .container {
       flex: 1;
       max-width: 1100px;
@@ -139,26 +159,6 @@
       padding: 20px;
       font-size: 0.9em;
     }
-
-    #user-msg {
-      text-align: center;
-      font-size: 1.2rem;
-      margin: 10px 0;
-    }
-
-    #logout-btn {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: none;
-    }
-
-    #logout-btn:hover {
-      background-color: #bb2d3b;
-    }
   </style>
 </head>
 <body>
@@ -174,10 +174,9 @@
       <a href="despre.html">Despre</a>
       <a href="functionalitate.html">Funcționalități</a>
       <a href="Administrare Internă.html">Administrare Internă</a>
+      <a href="finante.html">Finanțe</a>
       <a href="contact.html">Contact</a>
-    </div>
-    <div class="nav-links" id="admin-nav" style="display: none;">
-      <a href="angajati.html">👨‍💼 Angajați</a>
+      <a href="angajati.html" id="angajati-link" style="display: none;">Angajați</a>
     </div>
     <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
@@ -215,18 +214,25 @@
   </footer>
 
   <script>
-    const nume = localStorage.getItem("userNume");
-    const rol = localStorage.getItem("userRol");
+    document.addEventListener("DOMContentLoaded", function () {
+      const nume = localStorage.getItem("userNume");
+      const rol = localStorage.getItem("userRol");
 
-    if (nume) {
-      document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
-      document.getElementById("auth-buttons").style.display = "none";
-      document.getElementById("logout-btn").style.display = "inline-block";
+      if (nume) {
+        const authButtons = document.getElementById("auth-buttons");
+        const logoutBtn = document.getElementById("logout-btn");
+        const userMsg = document.getElementById("user-msg");
+        const angajatiLink = document.getElementById("angajati-link");
 
-      if (rol === "admin") {
-        document.getElementById("admin-nav").style.display = "flex";
+        if (authButtons) authButtons.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "inline-block";
+        if (userMsg) userMsg.innerText = `Bun venit, ${nume}!`;
+
+        if (rol === "admin" && angajatiLink) {
+          angajatiLink.style.display = "inline-block";
+        }
       }
-    }
+    });
 
     function logout() {
       localStorage.clear();
