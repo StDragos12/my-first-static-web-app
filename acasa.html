@@ -139,6 +139,26 @@
       padding: 20px;
       font-size: 0.9em;
     }
+
+    #user-msg {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
+    #logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #logout-btn:hover {
+      background-color: #bb2d3b;
+    }
   </style>
 </head>
 <body>
@@ -156,11 +176,14 @@
       <a href="Administrare Internă.html">Administrare Internă</a>
       <a href="contact.html">Contact</a>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Înregistrare</a>
     </div>
+    <button id="logout-btn" onclick="logout()">Logout</button>
   </nav>
+
+  <div id="user-msg"></div>
 
   <main class="container">
     <h2>Ce poți face cu IT Business Manager</h2>
@@ -187,6 +210,21 @@
   <footer>
     &copy; 2025 IT Business Manager. Toate drepturile rezervate.
   </footer>
+
+  <script>
+    const nume = localStorage.getItem("userNume");
+
+    if (nume) {
+      document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
+      document.getElementById("auth-buttons").style.display = "none";
+      document.getElementById("logout-btn").style.display = "inline-block";
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.reload();
+    }
+  </script>
 
 </body>
 </html>
