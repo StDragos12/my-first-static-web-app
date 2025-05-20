@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -41,7 +42,7 @@
       padding: 60px 20px;
       border-bottom-left-radius: 40px;
       border-bottom-right-radius: 40px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     nav {
@@ -90,36 +91,34 @@
     #user-msg {
       text-align: center;
       font-size: 1.2rem;
-      margin: 15px 0;
+      margin: 10px 0;
     }
 
     .container {
       flex: 1;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 40px auto;
-      padding: 30px;
+      padding: 20px;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
     h2 {
       text-align: center;
       color: var(--primary-color);
-      margin-bottom: 30px;
-      font-size: 2rem;
+      margin-bottom: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      font-size: 1.05rem;
     }
 
     th, td {
-      border: 1px solid #ddd;
-      padding: 14px;
+      border: 1px solid #ccc;
+      padding: 12px;
       text-align: center;
     }
 
@@ -129,42 +128,46 @@
     }
 
     form {
-      margin-top: 40px;
+      margin-top: 30px;
     }
 
     label {
       font-weight: bold;
       display: block;
-      margin-top: 15px;
-      font-size: 1rem;
+      margin-top: 10px;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      margin-top: 6px;
+      padding: 10px;
+      margin-top: 5px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 1rem;
     }
 
     button {
       margin-top: 20px;
-      padding: 12px 24px;
+      padding: 10px 20px;
       background-color: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 1rem;
     }
 
     button:hover {
       background-color: #0b5ed7;
     }
 
+    .chart-container {
+      margin-top: 40px;
+      width: 100%;
+      height: 600px;
+    }
+
     canvas {
-      margin-top: 50px;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     footer {
@@ -177,7 +180,6 @@
   </style>
 </head>
 <body>
-
   <header>
     <h1>Analiză Financiară</h1>
     <p>Monitorizează datele financiare proprii</p>
@@ -204,6 +206,8 @@
 
   <div class="container">
     <h2>Tranzacțiile tale</h2>
+
+    <button onclick="exportCSV()">📁 Exportă CSV</button>
 
     <table id="tabelFinante">
       <thead>
@@ -233,7 +237,9 @@
       <button type="submit">Adaugă tranzacție</button>
     </form>
 
-    <canvas id="financeChart" height="100"></canvas>
+    <div class="chart-container">
+      <canvas id="financeChart"></canvas>
+    </div>
   </div>
 
   <footer>
@@ -242,132 +248,26 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    let financeChart = null;
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const email = localStorage.getItem("userEmail");
-      const nume = localStorage.getItem("userNume");
-      const rol = localStorage.getItem("userRol");
-
-      if (email && nume) {
-        document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
-        document.getElementById("auth-buttons").style.display = "none";
-        document.getElementById("logout-btn").style.display = "inline-block";
-        if (rol === "admin") {
-          document.getElementById("angajati-link").style.display = "inline-block";
-        }
-        loadFinante();
-      } else {
-        window.location.href = "login.html";
-      }
-
-      document.getElementById("formularFinante").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const entry = {
-          user_email: email,
-          tip: document.getElementById("tip").value,
-          categorie: document.getElementById("categorie").value,
-          valoare: parseFloat(document.getElementById("valoare").value),
-          data: document.getElementById("data").value
-        };
-
-        try {
-          await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(entry)
-          });
-
-          this.reset();
-          loadFinante();
-        } catch (err) {
-          alert("Eroare la adăugare.");
-        }
-      });
-    });
-
-    async function loadFinante() {
-      const email = localStorage.getItem("userEmail");
-      try {
-        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getFinanceEntries?email=" + encodeURIComponent(email));
-        const data = await res.json();
-
-        const tabel = document.querySelector("#tabelFinante tbody");
-        tabel.innerHTML = "";
-
-        data.forEach(item => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${item.data}</td>
-            <td>${item.tip}</td>
-            <td>${item.valoare}</td>
-            <td>${item.categorie}</td>
-          `;
-          tabel.appendChild(row);
-        });
-
-        drawChart(data);
-      } catch (err) {
-        console.error("Eroare la încărcarea datelor financiare:", err);
-      }
-    }
-
-    function drawChart(data) {
-      const ctx = document.getElementById("financeChart").getContext("2d");
-
-      const venituri = {};
-      const cheltuieli = {};
-
-      data.forEach(entry => {
-        const luna = entry.data.slice(0, 7);
-        const suma = parseFloat(entry.valoare);
-        const tip = entry.tip.toLowerCase();
-
-        if (tip === "venit") {
-          venituri[luna] = (venituri[luna] || 0) + suma;
-        } else {
-          cheltuieli[luna] = (cheltuieli[luna] || 0) + suma;
-        }
-      });
-
-      const lunile = Array.from(new Set([...Object.keys(venituri), ...Object.keys(cheltuieli)])).sort();
-      const venituriData = lunile.map(luna => venituri[luna] || 0);
-      const cheltuieliData = lunile.map(luna => cheltuieli[luna] || 0);
-
-      if (financeChart instanceof Chart) {
-        financeChart.destroy();
-      }
-
-      financeChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: lunile,
-          datasets: [
-            {
-              label: 'Venituri',
-              data: venituriData,
-              backgroundColor: 'rgba(13, 110, 253, 0.6)'
-            },
-            {
-              label: 'Cheltuieli',
-              data: cheltuieliData,
-              backgroundColor: 'rgba(220, 53, 69, 0.6)'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true }
-          }
-        }
-      });
-    }
-
     function logout() {
       localStorage.clear();
       window.location.href = "login.html";
+    }
+
+    function exportCSV() {
+      const rows = [["Data", "Tip", "Valoare (lei)", "Categorie"]];
+      document.querySelectorAll("#tabelFinante tbody tr").forEach(tr => {
+        const row = Array.from(tr.children).map(td => td.innerText);
+        rows.push(row);
+      });
+
+      const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "tranzactii.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
 </body>
