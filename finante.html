@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Finanțe - IT Business Manager</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --primary-color: #0d6efd;
@@ -41,7 +43,7 @@
       padding: 60px 20px;
       border-bottom-left-radius: 40px;
       border-bottom-right-radius: 40px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
 
     nav {
@@ -159,7 +161,8 @@
     }
 
     canvas {
-      margin-top: 40px;
+      margin-top: 60px;
+      max-height: 400px;
     }
 
     footer {
@@ -215,31 +218,27 @@
     <form id="formularFinante">
       <label for="data">Data:</label>
       <input type="date" id="data" required>
-
       <label for="tip">Tip (Venit / Cheltuială):</label>
       <input type="text" id="tip" required>
-
       <label for="categorie">Categorie:</label>
       <input type="text" id="categorie" required>
-
       <label for="valoare">Valoare:</label>
       <input type="number" id="valoare" required>
-
       <button type="submit">Adaugă tranzacție</button>
     </form>
 
-    <canvas id="financeChart" height="100"></canvas>
+    <canvas id="finanteChart"></canvas>
   </div>
 
   <footer>
     &copy; 2025 IT Business Manager. Toate drepturile rezervate.
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const email = localStorage.getItem("userEmail");
     const nume = localStorage.getItem("userNume");
     const rol = localStorage.getItem("userRol");
+    let chart;
 
     if (email && nume) {
       document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
@@ -248,7 +247,7 @@
       if (rol === "admin") {
         document.getElementById("angajati-link").style.display = "inline-block";
       }
-      loadFinante();
+      loadTranzactii();
     } else {
       window.location.href = "login.html";
     }
@@ -258,92 +257,79 @@
       window.location.href = "login.html";
     }
 
-    async function loadFinante() {
+    async function loadTranzactii() {
       try {
-        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getFinanceEntries?email=" + encodeURIComponent(email));
+        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getTransactions?email=" + encodeURIComponent(email));
         const data = await res.json();
-
         const tabel = document.querySelector("#tabelFinante tbody");
         tabel.innerHTML = "";
+        const dailyTotals = {};
 
-        data.forEach(item => {
+        data.forEach(tr => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${item.data}</td>
-            <td>${item.tip}</td>
-            <td>${item.valoare}</td>
-            <td>${item.categorie}</td>
+            <td>${tr.data}</td>
+            <td>${tr.tip}</td>
+            <td>${parseFloat(tr.suma || tr.valoare).toFixed(2)}</td>
+            <td>${tr.descriere || tr.categorie || "-"}</td>
           `;
           tabel.appendChild(row);
+          const date = tr.data.slice(0, 10);
+          const valoare = parseFloat(tr.suma || tr.valoare);
+          const semn = tr.tip.toLowerCase() === "venit" ? 1 : -1;
+          dailyTotals[date] = (dailyTotals[date] || 0) + semn * valoare;
         });
 
-        drawChart(data);
+        const labels = Object.keys(dailyTotals).sort();
+        const valori = labels.map(d => dailyTotals[d]);
+
+        if (chart) chart.destroy();
+        const ctx = document.getElementById("finanteChart").getContext("2d");
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Sold Zilnic (lei)',
+              data: valori,
+              fill: true,
+              borderColor: 'rgb(13, 110, 253)',
+              backgroundColor: 'rgba(13, 110, 253, 0.1)',
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+          }
+        });
       } catch (err) {
-        console.error("Eroare la încărcarea datelor financiare:", err);
+        console.error("Eroare la încărcarea tranzacțiilor", err);
       }
     }
 
-    document.getElementById("formularFinante").addEventListener("submit", async function (e) {
+    document.getElementById("formularFinante").addEventListener("submit", async function(e) {
       e.preventDefault();
-
-      const entry = {
+      const tranzactie = {
         user_email: email,
+        data: document.getElementById("data").value,
         tip: document.getElementById("tip").value,
         categorie: document.getElementById("categorie").value,
-        valoare: parseFloat(document.getElementById("valoare").value),
-        data: document.getElementById("data").value
+        valoare: document.getElementById("valoare").value
       };
 
       try {
         await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(entry)
+          body: JSON.stringify(tranzactie)
         });
-
-        loadFinante();
+        loadTranzactii();
         this.reset();
       } catch (err) {
         alert("Eroare la adăugare.");
       }
     });
-
-    function drawChart(data) {
-      const ctx = document.getElementById("financeChart").getContext("2d");
-
-      const monthlyTotals = data.reduce((acc, entry) => {
-        const month = entry.data.slice(0, 7);
-        acc[month] = (acc[month] || 0) + parseFloat(entry.valoare);
-        return acc;
-      }, {});
-
-      const labels = Object.keys(monthlyTotals).sort();
-      const values = labels.map(month => monthlyTotals[month]);
-
-      if (window.financeChart) window.financeChart.destroy();
-
-      window.financeChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Total lunar (lei)',
-            data: values,
-            borderColor: '#0d6efd',
-            borderWidth: 2,
-            fill: false,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true }
-          }
-        }
-      });
-    }
   </script>
-
 </body>
 </html>
