@@ -3,112 +3,246 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gestionare Finanțe</title>
+  <title>Finanțe - ITBM</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f4f8fb;
-      padding: 40px;
-      max-width: 600px;
-      margin: auto;
+      margin: 0;
     }
+    header {
+      background: linear-gradient(to right, #0d6efd, #0dcaf0);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+    nav {
+      background-color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      flex-wrap: wrap;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+    nav a:hover {
+      background-color: #0dcaf0;
+      color: white;
+    }
+    #logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #logout-btn:hover {
+      background-color: #bb2d3b;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
     h2 {
+      text-align: center;
       color: #0d6efd;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
       text-align: center;
     }
-    form {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.08);
-      margin-top: 20px;
+
+    th {
+      background-color: #0d6efd;
+      color: white;
     }
+
+    form {
+      margin-top: 30px;
+    }
+
     label {
       font-weight: bold;
       display: block;
-      margin-top: 15px;
+      margin-top: 10px;
     }
-    input, select {
+
+    input {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
-      border: 1px solid #ccc;
       border-radius: 6px;
+      border: 1px solid #ccc;
     }
+
     button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
+      margin-top: 15px;
+      padding: 10px 20px;
       background-color: #0d6efd;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #0b5ed7;
     }
-    .status {
+
+    #user-msg {
       text-align: center;
-      font-weight: bold;
-      margin-top: 15px;
+      font-size: 1.1em;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
 
-  <h2>Adaugă tranzacție financiară</h2>
+  <header>
+    <h1>Analiză financiară</h1>
+    <p>Monitorizează datele financiare proprii</p>
+  </header>
 
-  <form id="formFinante">
-    <label for="tip">Tip tranzacție:</label>
-    <select id="tip" required>
-      <option value="venit">Venit</option>
-      <option value="cheltuiala">Cheltuială</option>
-    </select>
+  <nav>
+    <div class="nav-links">
+      <a href="index.html">Acasă</a>
+      <a href="despre.html">Despre</a>
+      <a href="functionalitate.html">Funcționalități</a>
+      <a href="Administrare Internă.html">Administrare Internă</a>
+      <a href="angajati.html">Angajați</a>
+      <a href="finante.html"><strong>Finanțe</strong></a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="nav-links" id="auth-buttons">
+      <a href="login.html">Login</a>
+      <a href="register.html">Înregistrare</a>
+    </div>
+    <button id="logout-btn" onclick="logout()" style="display:none;">Logout</button>
+  </nav>
 
-    <label for="categorie">Categorie:</label>
-    <input type="text" id="categorie" required placeholder="Ex: Salariu, Factură, Vânzare">
+  <div id="user-msg"></div>
 
-    <label for="valoare">Valoare (lei):</label>
-    <input type="number" id="valoare" required>
+  <div class="container">
+    <h2>Tranzacțiile tale</h2>
 
-    <label for="data">Dată:</label>
-    <input type="date" id="data" required>
+    <table id="tabelFinante">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Tip</th>
+          <th>Sumă (lei)</th>
+          <th>Descriere</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Tranzacții încărcate din baza de date -->
+      </tbody>
+    </table>
 
-    <button type="submit">Trimite tranzacția</button>
-    <div class="status" id="status"></div>
-  </form>
+    <form id="formularFinante">
+      <label for="data">Data:</label>
+      <input type="date" id="data" required>
+
+      <label for="tip">Tip (Venit / Cheltuială):</label>
+      <input type="text" id="tip" required>
+
+      <label for="suma">Sumă:</label>
+      <input type="number" id="suma" required>
+
+      <label for="descriere">Descriere:</label>
+      <input type="text" id="descriere" required>
+
+      <button type="submit">Adaugă tranzacție</button>
+    </form>
+  </div>
 
   <script>
-    document.getElementById('formFinante').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    const email = localStorage.getItem("userEmail");
+    const nume = localStorage.getItem("userNume");
 
-      const user_email = localStorage.getItem("userEmail");
-      if (!user_email) {
-        alert("Trebuie să fii autentificat.");
-        return;
+    if (email && nume) {
+      document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
+      document.getElementById("auth-buttons").style.display = "none";
+      document.getElementById("logout-btn").style.display = "inline-block";
+      loadTranzactii();
+    } else {
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    async function loadTranzactii() {
+      try {
+        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/getTransactions?email=" + encodeURIComponent(email));
+        const data = await res.json();
+        const tabel = document.querySelector("#tabelFinante tbody");
+        tabel.innerHTML = "";
+        data.forEach(tr => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${tr.data}</td>
+            <td>${tr.tip}</td>
+            <td>${tr.suma}</td>
+            <td>${tr.descriere}</td>
+          `;
+          tabel.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Eroare la încărcarea tranzacțiilor", err);
       }
+    }
 
-      const tip = document.getElementById('tip').value;
-      const categorie = document.getElementById('categorie').value;
-      const valoare = document.getElementById('valoare').value;
-      const data = document.getElementById('data').value;
+    document.getElementById("formularFinante").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const tranzactie = {
+        email,
+        data: document.getElementById("data").value,
+        tip: document.getElementById("tip").value,
+        suma: document.getElementById("suma").value,
+        descriere: document.getElementById("descriere").value
+      };
 
       try {
-        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
+        await fetch("https://itbm-register-func.azurewebsites.net/api/addTransaction", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_email, tip, categorie, valoare, data })
+          body: JSON.stringify(tranzactie)
         });
-
-        const text = await res.text();
-        document.getElementById('status').innerText = text.includes("✅") ? text : "❌ " + text;
-        document.getElementById('status').style.color = text.includes("✅") ? "green" : "red";
-
-        if (res.ok) this.reset();
+        loadTranzactii();
+        this.reset();
       } catch (err) {
-        document.getElementById('status').innerText = "Eroare de rețea.";
-        document.getElementById('status').style.color = "red";
+        alert("Eroare la adăugare.");
       }
     });
   </script>
