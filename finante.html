@@ -237,6 +237,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  let financeChart = null;
+
   document.addEventListener("DOMContentLoaded", () => {
     const email = localStorage.getItem("userEmail");
     const nume = localStorage.getItem("userNume");
@@ -254,10 +256,30 @@
       window.location.href = "login.html";
     }
 
-    function logout() {
-      localStorage.clear();
-      window.location.href = "login.html";
-    }
+    document.getElementById("formularFinante").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const entry = {
+        user_email: email,
+        tip: document.getElementById("tip").value,
+        categorie: document.getElementById("categorie").value,
+        valoare: parseFloat(document.getElementById("valoare").value),
+        data: document.getElementById("data").value
+      };
+
+      try {
+        await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(entry)
+        });
+
+        this.reset();
+        loadFinante();
+      } catch (err) {
+        alert("Eroare la adăugare.");
+      }
+    });
 
     async function loadFinante() {
       try {
@@ -284,58 +306,36 @@
       }
     }
 
-    document.getElementById("formularFinante").addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const entry = {
-        user_email: email,
-        tip: document.getElementById("tip").value,
-        categorie: document.getElementById("categorie").value,
-        valoare: parseFloat(document.getElementById("valoare").value),
-        data: document.getElementById("data").value
-      };
-
-      try {
-        await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(entry)
-        });
-
-        loadFinante();
-        this.reset();
-      } catch (err) {
-        alert("Eroare la adăugare.");
-      }
-    });
-
     function drawChart(data) {
-      const ctx = document.getElementById("financeChart").getContext("2d");
-
       const venituri = {};
       const cheltuieli = {};
 
       data.forEach(entry => {
-        const luna = entry.data.slice(0, 7);
+        const luna = entry.data.slice(0, 7); // YYYY-MM
         const suma = parseFloat(entry.valoare);
+        const tip = entry.tip.toLowerCase();
 
-        if (entry.tip.toLowerCase() === "venit") {
+        if (tip === "venit") {
           venituri[luna] = (venituri[luna] || 0) + suma;
         } else {
           cheltuieli[luna] = (cheltuieli[luna] || 0) + suma;
         }
       });
 
-      const toateLunile = Array.from(new Set([...Object.keys(venituri), ...Object.keys(cheltuieli)])).sort();
-      const venituriData = toateLunile.map(luna => venituri[luna] || 0);
-      const cheltuieliData = toateLunile.map(luna => cheltuieli[luna] || 0);
+      const lunile = Array.from(new Set([...Object.keys(venituri), ...Object.keys(cheltuieli)])).sort();
+      const venituriData = lunile.map(luna => venituri[luna] || 0);
+      const cheltuieliData = lunile.map(luna => cheltuieli[luna] || 0);
 
-      if (window.financeChart) window.financeChart.destroy();
+      const ctx = document.getElementById("financeChart").getContext("2d");
 
-      window.financeChart = new Chart(ctx, {
+      if (financeChart instanceof Chart) {
+        financeChart.destroy();
+      }
+
+      financeChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: toateLunile,
+          labels: lunile,
           datasets: [
             {
               label: 'Venituri',
@@ -353,9 +353,23 @@
           responsive: true,
           scales: {
             y: { beginAtZero: true }
+          },
+          plugins: {
+            legend: {
+              position: 'top'
+            },
+            title: {
+              display: true,
+              text: 'Venituri și Cheltuieli pe lună'
+            }
           }
         }
       });
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
     }
   });
 </script>
