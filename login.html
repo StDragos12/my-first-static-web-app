@@ -76,7 +76,6 @@
       const email = document.getElementById('email').value;
       const parola = document.getElementById('parola').value;
 
-      // Hash parola cu SHA-256
       const encoder = new TextEncoder();
       const data = encoder.encode(parola);
       const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -93,18 +92,13 @@
         const statusText = document.getElementById('status');
         if (response.ok) {
           const result = await response.json();
-
-          // ✅ Salvăm în localStorage
-          localStorage.setItem("userEmail", result.email);
-          localStorage.setItem("userNume", result.nume);
-          localStorage.setItem("userRol", result.rol);
-
           statusText.innerText = "✔️ Autentificare reușită!";
           statusText.style.color = "green";
-
-          // ✅ Redirect
+          // Salvăm în localStorage
+          localStorage.setItem("userEmail", result.email);
+          localStorage.setItem("userNume", result.nume);
+          // Redirect
           window.location.href = "acasa.html";
-
         } else {
           const msg = await response.text();
           statusText.innerText = "❌ " + msg;

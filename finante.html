@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestionare Finanțe</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      color: #0d6efd;
+      text-align: center;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+      margin-top: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b5ed7;
+    }
+    .status {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Adaugă tranzacție financiară</h2>
+
+  <form id="formFinante">
+    <label for="tip">Tip tranzacție:</label>
+    <select id="tip" required>
+      <option value="venit">Venit</option>
+      <option value="cheltuiala">Cheltuială</option>
+    </select>
+
+    <label for="categorie">Categorie:</label>
+    <input type="text" id="categorie" required placeholder="Ex: Salariu, Factură, Vânzare">
+
+    <label for="valoare">Valoare (lei):</label>
+    <input type="number" id="valoare" required>
+
+    <label for="data">Dată:</label>
+    <input type="date" id="data" required>
+
+    <button type="submit">Trimite tranzacția</button>
+    <div class="status" id="status"></div>
+  </form>
+
+  <script>
+    document.getElementById('formFinante').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const user_email = localStorage.getItem("userEmail");
+      if (!user_email) {
+        alert("Trebuie să fii autentificat.");
+        return;
+      }
+
+      const tip = document.getElementById('tip').value;
+      const categorie = document.getElementById('categorie').value;
+      const valoare = document.getElementById('valoare').value;
+      const data = document.getElementById('data').value;
+
+      try {
+        const res = await fetch("https://itbm-register-func.azurewebsites.net/api/addFinanceEntry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_email, tip, categorie, valoare, data })
+        });
+
+        const text = await res.text();
+        document.getElementById('status').innerText = text.includes("✅") ? text : "❌ " + text;
+        document.getElementById('status').style.color = text.includes("✅") ? "green" : "red";
+
+        if (res.ok) this.reset();
+      } catch (err) {
+        document.getElementById('status').innerText = "Eroare de rețea.";
+        document.getElementById('status').style.color = "red";
+      }
+    });
+  </script>
+
+</body>
+</html>
