@@ -176,6 +176,9 @@
       <a href="Administrare Internă.html">Administrare Internă</a>
       <a href="contact.html">Contact</a>
     </div>
+    <div class="nav-links" id="admin-nav" style="display: none;">
+      <a href="angajati.html">👨‍💼 Angajați</a>
+    </div>
     <div class="nav-links" id="auth-buttons">
       <a href="login.html">Login</a>
       <a href="register.html">Înregistrare</a>
@@ -213,11 +216,16 @@
 
   <script>
     const nume = localStorage.getItem("userNume");
+    const rol = localStorage.getItem("userRol");
 
     if (nume) {
       document.getElementById("user-msg").innerText = `Bun venit, ${nume}!`;
       document.getElementById("auth-buttons").style.display = "none";
       document.getElementById("logout-btn").style.display = "inline-block";
+
+      if (rol === "admin") {
+        document.getElementById("admin-nav").style.display = "flex";
+      }
     }
 
     function logout() {
